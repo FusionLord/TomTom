@@ -6,7 +6,10 @@ import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -69,7 +72,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 			OBJLoader.instance.addDomain(ModInfo.MOD_ID);
 			OBJModel gpsArrow = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow.obj"));
 			Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-			model = gpsArrow.bake(gpsArrow.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
+			model = gpsArrow.bake(gpsArrow.getDefaultState(), DefaultVertexFormats.ITEM, textureGetter);
 
 			texture = new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png");
 		}
@@ -95,9 +98,11 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void drawHud(TickEvent.RenderTickEvent event)
 	{
-		if (event.phase != TickEvent.Phase.END || mc.thePlayer == null || getPos() == null || mc.currentScreen != null) return;
+		if (event.phase != TickEvent.Phase.END || mc.thePlayer == null || getPos() == null /*|| mc.currentScreen != null*/) return;
 
 		ScaledResolution scaledResolution = new ScaledResolution(mc);
+
+		float scale = 50 * scaledResolution.getScaleFactor();
 
 		EntityPlayer player = mc.thePlayer;
 		BlockPos pos = player.getPosition();
@@ -114,23 +119,24 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 
 		mc.getTextureManager().bindTexture(texture);
 		GlStateManager.pushMatrix();
-		GlStateManager.enableLighting();
+		GlStateManager.disableCull();
 
 		GlStateManager.translate(scaledResolution.getScaledWidth() / 2, scaledResolution.getScaledHeight() - 105, 500);
-		GlStateManager.scale(50f, 50f, 50f);
-		GlStateManager.rotate(45f, 1f, 0f, 0f);
-		GlStateManager.rotate(angleDegrees, 0f, 1f, 0f);
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(-45f, 1f, 0f, 0f);
+		GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
 
+		RenderHelper.enableStandardItemLighting();
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(model, 1f, 1f, 1f, 1f);
+		RenderHelper.disableStandardItemLighting();
 
-		GlStateManager.disableLighting();
 		GlStateManager.popMatrix();
 
-		String s = getDisplayText();
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 82, Color.white.hashCode());
-		s = String.format("%sm", (int)dist);
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 72, Color.white.hashCode());
-		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 62, Color.white.hashCode());
+//		String s = getDisplayText();
+//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 82, Color.white.hashCode());
+//		s = String.format("%sm", (int)dist);
+//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 72, Color.white.hashCode());
+//		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
+//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 62, Color.white.hashCode());
 	}
 }
