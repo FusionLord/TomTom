@@ -27,8 +27,9 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 {
 	public static ClientTickHandler INSTANCE;
 
-	private OBJModel gpsArrow;
 	private Minecraft mc = Minecraft.getMinecraft();
+	ResourceLocation texture;
+	IBakedModel model;
 	private double dist;
 	private int ticker;
 
@@ -66,8 +67,11 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 		try
 		{
 			OBJLoader.instance.addDomain(ModInfo.MOD_ID);
-			gpsArrow = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow.obj"));
-			LogHelper.info(">>> GPS Arrow: " + gpsArrow + " with " + gpsArrow.getMatLib().getGroups().values().size() + " groups.");
+			OBJModel gpsArrow = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow.obj"));
+			Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+			model = gpsArrow.bake(gpsArrow.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
+
+			texture = new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png");
 		}
 		catch(IOException e)
 		{
@@ -108,7 +112,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 
 		angleDegrees -= player.rotationYaw - 180;
 
-		mc.getTextureManager().bindTexture(new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png"));
+		mc.getTextureManager().bindTexture(texture);
 		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();
 
@@ -117,11 +121,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 		GlStateManager.rotate(45f, 1f, 0f, 0f);
 		GlStateManager.rotate(angleDegrees, 0f, 1f, 0f);
 
-		Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-		IBakedModel bakedModel = gpsArrow.bake(gpsArrow.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
-
-		GlStateManager.color(0f/255f, 255f/255f, 0f/255f);
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, 1f, 1f, 1f);
+		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(model, 1f, 1f, 1f, 1f);
 
 		GlStateManager.disableLighting();
 		GlStateManager.popMatrix();
