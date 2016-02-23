@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tomtom",
+  "name": "TomTom",
+  "description": "Gps System based on the TomTom addon for World of Warcraft",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["FusionLord"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
