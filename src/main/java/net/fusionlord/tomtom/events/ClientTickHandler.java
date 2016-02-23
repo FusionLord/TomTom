@@ -102,7 +102,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 
 		ScaledResolution scaledResolution = new ScaledResolution(mc);
 
-		float scale = 50 * scaledResolution.getScaleFactor();
+		float scale = 20 * scaledResolution.getScaleFactor();
 
 		EntityPlayer player = mc.thePlayer;
 		BlockPos pos = player.getPosition();
@@ -120,23 +120,25 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 		mc.getTextureManager().bindTexture(texture);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
+		GlStateManager.enableRescaleNormal();
+		RenderHelper.enableGUIStandardItemLighting();
 
 		GlStateManager.translate(scaledResolution.getScaledWidth() / 2, scaledResolution.getScaledHeight() - 105, 500);
 		GlStateManager.scale(scale, scale, scale);
 		GlStateManager.rotate(-45f, 1f, 0f, 0f);
 		GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
 
-		RenderHelper.enableStandardItemLighting();
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(model, 1f, 1f, 1f, 1f);
 		RenderHelper.disableStandardItemLighting();
 
+		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 
-//		String s = getDisplayText();
-//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 82, Color.white.hashCode());
-//		s = String.format("%sm", (int)dist);
-//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 72, Color.white.hashCode());
-//		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
-//		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 62, Color.white.hashCode());
+		String s = getDisplayText();
+		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 82, Color.white.hashCode());
+		s = String.format("%sm", (int)dist);
+		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 72, Color.white.hashCode());
+		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
+		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() - 62, Color.white.hashCode());
 	}
 }
