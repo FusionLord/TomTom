@@ -110,6 +110,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 
 		mc.getTextureManager().bindTexture(new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png"));
 		GlStateManager.pushMatrix();
+		GlStateManager.enableLighting();
 
 		GlStateManager.translate(scaledResolution.getScaledWidth() / 2, scaledResolution.getScaledHeight() - 105, 500);
 		GlStateManager.scale(50f, 50f, 50f);
@@ -122,6 +123,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 		GlStateManager.color(0f/255f, 255f/255f, 0f/255f);
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, 1f, 1f, 1f);
 
+		GlStateManager.disableLighting();
 		GlStateManager.popMatrix();
 
 		String s = getDisplayText();
