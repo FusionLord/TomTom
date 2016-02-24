@@ -1,19 +1,12 @@
 package net.fusionlord.tomtom.commands;
 
-import com.sun.deploy.util.SessionState;
-import com.sun.deploy.util.StringUtils;
 import net.fusionlord.tomtom.events.ClientTickHandler;
-import net.fusionlord.tomtom.network.PacketHandler;
-import net.fusionlord.tomtom.network.messages.MessageSetDestination;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
