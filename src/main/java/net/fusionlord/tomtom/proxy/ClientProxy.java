@@ -1,8 +1,10 @@
 package net.fusionlord.tomtom.proxy;
 
+import net.fusionlord.tomtom.commands.WaypointCommand;
 import net.fusionlord.tomtom.events.ClientTickHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
@@ -18,5 +20,7 @@ public class ClientProxy extends CommonProxy
 		ClientTickHandler tickHandler = new ClientTickHandler();
 		MinecraftForge.EVENT_BUS.register(tickHandler);
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(tickHandler);
+
+		ClientCommandHandler.instance.registerCommand(new WaypointCommand());
 	}
 }

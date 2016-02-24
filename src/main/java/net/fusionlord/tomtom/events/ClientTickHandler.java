@@ -1,12 +1,10 @@
 package net.fusionlord.tomtom.events;
 
 import com.google.common.base.Function;
-import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -16,7 +14,6 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -98,7 +95,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void drawHud(TickEvent.RenderTickEvent event)
 	{
-		if (event.phase != TickEvent.Phase.END || mc.thePlayer == null || getPos() == null /*|| mc.currentScreen != null*/) return;
+		if (event.phase != TickEvent.Phase.END || mc.thePlayer == null || getPos() == null || mc.currentScreen != null) return;
 
 		ScaledResolution scaledResolution = new ScaledResolution(mc);
 
@@ -125,7 +122,7 @@ public class ClientTickHandler implements IResourceManagerReloadListener
 
 		GlStateManager.translate(scaledResolution.getScaledWidth() / 2, scaledResolution.getScaledHeight() - 105, 500);
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.rotate(-45f, 1f, 0f, 0f);
+		GlStateManager.rotate(-25f, 1f, 0f, 0f);
 		GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
 
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(model, 1f, 1f, 1f, 1f);

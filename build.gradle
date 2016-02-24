@@ -1,6 +1,11 @@
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.matthewprenger.cursegradle'
 
+apply from: 'gradle/scripts/dependencies.gradle'
+apply from: 'gradle/scripts/integration.gradle'
+apply from: 'gradle/scripts/artifacts.gradle'
+apply from: 'gradle/scripts/optional.gradle'
+
 // For those who want the bleeding edge
 buildscript {
     repositories {
@@ -58,24 +63,24 @@ minecraft {
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+                // replace version and mcversion
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 // Add Access Transformers Manifest
 jar {
@@ -91,19 +96,6 @@ curseforge {
         id = "240877"
         changelog = file("build/libs/changelog.txt")
         addGameVersion minecraft_version
+        addArtifact devJar
     }
-}
-group 'net.fusionlord.tomtom'
-version '1.0-SNAPSHOT'
-
-apply plugin: 'java'
-
-sourceCompatibility = 1.5
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
 }
