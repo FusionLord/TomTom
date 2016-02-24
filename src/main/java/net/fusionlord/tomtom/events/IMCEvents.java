@@ -1,12 +1,10 @@
 package net.fusionlord.tomtom.events;
 
 import com.google.common.collect.ImmutableList;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import net.fusionlord.tomtom.TomTom;
 import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.network.PacketHandler;
 import net.fusionlord.tomtom.network.messages.MessageSetDestination;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
