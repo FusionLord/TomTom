@@ -1,5 +1,6 @@
 package net.fusionlord.tomtom.proxy;
 
+import net.fusionlord.tomtom.configuration.ConfigurationFile;
 import net.fusionlord.tomtom.events.IMCEvents;
 import net.fusionlord.tomtom.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +16,7 @@ public class CommonProxy implements IProxy
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
+		MinecraftForge.EVENT_BUS.register(new ConfigurationFile(event.getSuggestedConfigurationFile()));
 	}
 
 	@Override

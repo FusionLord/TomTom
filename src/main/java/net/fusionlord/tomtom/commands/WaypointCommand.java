@@ -1,10 +1,11 @@
 package net.fusionlord.tomtom.commands;
 
-import net.fusionlord.tomtom.events.ClientTickHandler;
+import net.fusionlord.tomtom.events.TomTomEvents;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,22 +49,72 @@ public class WaypointCommand implements ICommand
 	@Override
 	public void processCommand(ICommandSender sender, String[] argString)
 	{
-		System.out.println("processing");
-		if (argString.length < 3)
+		if (argString.length < 3 && argString.length != 1)
 		{
-			sender.addChatMessage(new ChatComponentText("Usage: " + getCommandUsage(sender)));
-		}
-		BlockPos pos = new BlockPos(Integer.parseInt(argString[0]), Integer.parseInt(argString[1]), Integer.parseInt(argString[2]));
-
-		String displayText = "";
-
-		for (int i = 3; i < argString.length; i++)
-		{
-			displayText = displayText + " " + argString[i];
+			fail(sender);
+			return;
 		}
 
-		ClientTickHandler.INSTANCE.setPos(pos);
-		ClientTickHandler.INSTANCE.setDisplayText(displayText, "Destination");
+		if (argString.length == 1)
+		{
+			if (argString[0].equalsIgnoreCase("clear"))
+			{
+				TomTomEvents.INSTANCE.setPos(null);
+				TomTomEvents.INSTANCE.setDisplayText("", "");
+			}
+			if (argString[0].equalsIgnoreCase("edit"))
+			{
+				TomTomEvents.INSTANCE.enableEditMode();
+			}
+		}
+		else
+		{
+			int x, y, z;
+			if (StringUtils.isNumeric(argString[0]) || argString[0].equalsIgnoreCase("~"))
+			{
+				x = argString[0].equalsIgnoreCase("~") ? sender.getPosition().getX() : Integer.parseInt(argString[0]);
+			}
+			else
+			{
+				fail(sender);
+				return;
+			}
+
+			if (StringUtils.isNumeric(argString[1]) || argString[1].equalsIgnoreCase("~"))
+			{
+				y = argString[1].equalsIgnoreCase("~") ? sender.getPosition().getY() : Integer.parseInt(argString[1]);
+			}
+			else
+			{
+				fail(sender);
+				return;
+			}
+
+			if (StringUtils.isNumeric(argString[2]) || argString[2].equalsIgnoreCase("~"))
+			{
+				z = argString[2].equalsIgnoreCase("~") ? sender.getPosition().getZ() : Integer.parseInt(argString[2]);
+			}
+			else
+			{
+				fail(sender);
+				return;
+			}
+
+			String displayText = "";
+
+			for(int i = 3; i < argString.length; i++)
+			{
+				displayText = displayText + " " + argString[i];
+			}
+
+			TomTomEvents.INSTANCE.setPos(new BlockPos(x, y, z));
+			TomTomEvents.INSTANCE.setDisplayText(displayText, "Destination");
+		}
+	}
+
+	private void fail(ICommandSender sender)
+	{
+		sender.addChatMessage(new ChatComponentText("Usage: " + getCommandUsage(sender)));
 	}
 
 	@Override

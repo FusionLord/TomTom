@@ -1,7 +1,7 @@
 package net.fusionlord.tomtom.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import net.fusionlord.tomtom.events.ClientTickHandler;
+import net.fusionlord.tomtom.events.TomTomEvents;
 import net.fusionlord.tomtom.helpers.LogHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
@@ -43,8 +43,8 @@ public class MessageSetDestination implements IMessage
 		public IMessage onMessage(MessageSetDestination message, MessageContext ctx)
 		{
 			LogHelper.info(">>> packet recieved!");
-			ClientTickHandler.INSTANCE.setDisplayText(message.tagCompound.getString("text"), "Destination!");
-			ClientTickHandler.INSTANCE.setPos(BlockPos.fromLong(message.tagCompound.getLong("location")));
+			TomTomEvents.INSTANCE.setDisplayText(message.tagCompound.getString("text"), "Destination!");
+			TomTomEvents.INSTANCE.setPos(BlockPos.fromLong(message.tagCompound.getLong("location")));
 			return null;
 		}
 	}

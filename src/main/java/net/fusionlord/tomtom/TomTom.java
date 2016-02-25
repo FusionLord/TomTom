@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 
 @SuppressWarnings("ALL")
-@Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.VERSION)
+@Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.VERSION, guiFactory = ModInfo.GUI_FACTORY)
 public class TomTom
 {
 	@Mod.Instance(ModInfo.MOD_ID)
@@ -28,8 +28,7 @@ public class TomTom
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event)
 	{
-		if (event.getSide() == Side.SERVER)
-			LogHelper.info("This mod is client side only and makes no changes on the server.");
+		proxy.preInit(event);
 	}
 
 	@EventHandler
@@ -41,6 +40,6 @@ public class TomTom
 	@EventHandler
 	public void PostInit(FMLPostInitializationEvent event)
 	{
-
+		proxy.postInit(event);
 	}
 }

@@ -2,14 +2,14 @@
 {
   "modid": "tomtom",
   "name": "TomTom",
-  "description": "Gps System based on the TomTom addon for World of Warcraft",
+  "description": "Gps System based on the World of Warcraft addon, TomTom.\nhttp://www.curse.com/addons/wow/tomtom\n\nCommands\:\n  * /tomtom <x> <y> <z> [display text]\n  * /tomtom clear\nAliases\:\n  * way\n  * waypoint",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "http://minecraft.curseforge.com/projects/tomtom",
   "updateUrl": "",
   "authorList": ["FusionLord"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "/assets/tomtom/textures/icon.png",
   "screenshots": [],
   "dependencies": []
 }

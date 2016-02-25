@@ -46,12 +46,12 @@ public class IMCEvents
 						return;
 					}
 
-					ClientTickHandler.INSTANCE.setPos(BlockPos.fromLong(tag.getLong("location")));
+					TomTomEvents.INSTANCE.setPos(BlockPos.fromLong(tag.getLong("location")));
 					if(tag.hasKey("text"))
 					{
-						ClientTickHandler.INSTANCE.setDisplayText(tag.getString("text"), "Destination");
+						TomTomEvents.INSTANCE.setDisplayText(tag.getString("text"), "Destination");
 					}
-					LogHelper.info(String.format("BlockPos: %s DisplayText: %s", ClientTickHandler.INSTANCE.getPos().toString(), ClientTickHandler.INSTANCE.getDisplayText()));
+					LogHelper.info(String.format("BlockPos: %s DisplayText: %s", TomTomEvents.INSTANCE.getPos().toString(), TomTomEvents.INSTANCE.getDisplayText()));
 				}
 			}
 		}

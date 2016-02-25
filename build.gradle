@@ -83,17 +83,17 @@ processResources
         }
 
 // Add Access Transformers Manifest
-jar {
-    manifest {
-        attributes 'FMLAT': 'Graves_at.cfg'
-    }
-}
+//jar {
+//    manifest {
+//        attributes 'FMLAT': 'TomTom_at.cfg'
+//    }
+//}
 
 curseforge {
     apiKey = curseApiKey
     project {
         releaseType = curseReleaseType
-        id = "242176"
+        id = "240877"
         changelog = file("build/libs/changelog.txt")
         addGameVersion minecraft_version
         addArtifact devJar
