@@ -16,7 +16,6 @@ public class CommonProxy implements IProxy
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		MinecraftForge.EVENT_BUS.register(new ConfigurationFile(event.getSuggestedConfigurationFile()));
 	}
 
 	@Override
