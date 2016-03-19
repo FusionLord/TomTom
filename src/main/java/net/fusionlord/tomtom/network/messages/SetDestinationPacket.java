@@ -13,16 +13,24 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Created by FusionLord on 2/23/2016.
  */
-public class MessageSetDestination implements IMessage
+public class SetDestinationPacket implements IMessage
 {
 	private NBTTagCompound tagCompound;
 
-	public MessageSetDestination() {}
+	public SetDestinationPacket()
+	{
+	}
 
-	public MessageSetDestination(NBTTagCompound tagCompound)
+	public SetDestinationPacket(NBTTagCompound tagCompound)
 	{
 		this.tagCompound = tagCompound;
-		LogHelper.info(">>> Sending packet!");
+	}
+
+	public SetDestinationPacket(BlockPos pos, String label)
+	{
+		tagCompound = new NBTTagCompound();
+		tagCompound.setFloat("location", pos.toLong());
+		tagCompound.setString("text", label);
 	}
 
 	@Override
@@ -37,13 +45,13 @@ public class MessageSetDestination implements IMessage
 		ByteBufUtils.writeTag(buf, tagCompound);
 	}
 
-	public static class HANDLER implements IMessageHandler<MessageSetDestination, IMessage>
+	public static class HANDLER implements IMessageHandler<SetDestinationPacket, IMessage>
 	{
 		@Override
-		public IMessage onMessage(MessageSetDestination message, MessageContext ctx)
+		public IMessage onMessage(SetDestinationPacket message, MessageContext ctx)
 		{
 			LogHelper.info(">>> packet recieved!");
-			TomTomEvents.INSTANCE.setDisplayText(message.tagCompound.getString("text"), "Destination!");
+			TomTomEvents.INSTANCE.setDisplayText(message.tagCompound.getString("text"));
 			TomTomEvents.INSTANCE.setPos(BlockPos.fromLong(message.tagCompound.getLong("location")));
 			return null;
 		}

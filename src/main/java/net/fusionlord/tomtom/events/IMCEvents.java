@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.fusionlord.tomtom.TomTom;
 import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.network.PacketHandler;
-import net.fusionlord.tomtom.network.messages.MessageSetDestination;
+import net.fusionlord.tomtom.network.messages.SetDestinationPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -42,14 +42,14 @@ public class IMCEvents
 					if (event.side == Side.SERVER)
 					{
 						EntityPlayerMP player = (EntityPlayerMP) MinecraftServer.getServer().getEntityFromUuid(new UUID(tag.getLong("uuid-most"), tag.getLong("uuid-least")));
-						PacketHandler.INSTANCE.sendTo(new MessageSetDestination(tag), player);
+						PacketHandler.INSTANCE.sendTo(new SetDestinationPacket(tag), player);
 						return;
 					}
 
 					TomTomEvents.INSTANCE.setPos(BlockPos.fromLong(tag.getLong("location")));
 					if(tag.hasKey("text"))
 					{
-						TomTomEvents.INSTANCE.setDisplayText(tag.getString("text"), "Destination");
+						TomTomEvents.INSTANCE.setDisplayText(tag.getString("text"));
 					}
 					LogHelper.info(String.format("BlockPos: %s DisplayText: %s", TomTomEvents.INSTANCE.getPos().toString(), TomTomEvents.INSTANCE.getDisplayText()));
 				}

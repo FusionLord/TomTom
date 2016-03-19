@@ -1,7 +1,8 @@
 package net.fusionlord.tomtom.network;
 
 import net.fusionlord.tomtom.helpers.ModInfo;
-import net.fusionlord.tomtom.network.messages.MessageSetDestination;
+import net.fusionlord.tomtom.network.messages.SetDestinationPacket;
+import net.fusionlord.tomtom.network.messages.VillageRequestPacket;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,6 +16,7 @@ public class PacketHandler
 
 	public static void init()
 	{
-		INSTANCE.registerMessage(MessageSetDestination.HANDLER.class, MessageSetDestination.class, 0, Side.CLIENT);
+		INSTANCE.registerMessage(SetDestinationPacket.HANDLER.class, SetDestinationPacket.class, 0, Side.CLIENT);
+		INSTANCE.registerMessage(VillageRequestPacket.HANDLER.class, VillageRequestPacket.class, 1, Side.SERVER);
 	}
 }

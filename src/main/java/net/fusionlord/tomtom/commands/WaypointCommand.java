@@ -1,6 +1,8 @@
 package net.fusionlord.tomtom.commands;
 
 import net.fusionlord.tomtom.events.TomTomEvents;
+import net.fusionlord.tomtom.network.PacketHandler;
+import net.fusionlord.tomtom.network.messages.VillageRequestPacket;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
@@ -60,11 +62,17 @@ public class WaypointCommand implements ICommand
 			if (argString[0].equalsIgnoreCase("clear"))
 			{
 				TomTomEvents.INSTANCE.setPos(null);
-				TomTomEvents.INSTANCE.setDisplayText("", "");
+				TomTomEvents.INSTANCE.setDisplayText("");
+				return;
 			}
 			if (argString[0].equalsIgnoreCase("edit"))
 			{
 				TomTomEvents.INSTANCE.enableEditMode();
+				return;
+			}
+			if(argString[0].equalsIgnoreCase("struct"))
+			{
+				PacketHandler.INSTANCE.sendToServer(new VillageRequestPacket());
 			}
 		}
 		else
@@ -108,7 +116,7 @@ public class WaypointCommand implements ICommand
 			}
 
 			TomTomEvents.INSTANCE.setPos(new BlockPos(x, y, z));
-			TomTomEvents.INSTANCE.setDisplayText(displayText, "Destination");
+			TomTomEvents.INSTANCE.setDisplayText(displayText);
 		}
 	}
 

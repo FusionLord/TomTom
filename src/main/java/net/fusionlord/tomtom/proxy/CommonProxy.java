@@ -1,6 +1,5 @@
 package net.fusionlord.tomtom.proxy;
 
-import net.fusionlord.tomtom.configuration.ConfigurationFile;
 import net.fusionlord.tomtom.events.IMCEvents;
 import net.fusionlord.tomtom.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;

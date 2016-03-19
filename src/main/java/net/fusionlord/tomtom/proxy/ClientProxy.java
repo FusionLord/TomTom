@@ -26,6 +26,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void init (FMLInitializationEvent event)
 	{
+		super.init(event);
 		MinecraftForge.EVENT_BUS.register(TomTomEvents.INSTANCE);
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(TomTomEvents.INSTANCE);
 //		MinecraftForge.EVENT_BUS.register(new SavingEvents());

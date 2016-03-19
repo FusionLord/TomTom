@@ -5,7 +5,8 @@ import net.fusionlord.tomtom.configuration.ConfigurationFile;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -17,8 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
-import net.minecraftforge.fml.common.eventhandler.*;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -30,15 +30,13 @@ import java.io.IOException;
 public class TomTomEvents implements IResourceManagerReloadListener
 {
 	public static TomTomEvents INSTANCE;
-
+	public float x = 0;
+	public float y = 0;
 	private Minecraft mc = Minecraft.getMinecraft();
 	private ResourceLocation texture;
 	private IBakedModel bakedModel;
 	private double dist;
 	private int ticker;
-	public float x = 0;
-	public float y = 0;
-
 	private BlockPos pos;
 	private String displayText;
 	private boolean editMode;
@@ -48,9 +46,9 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		INSTANCE = this;
 	}
 
-	public void setDisplayText(String text, String def)
+	public BlockPos getPos()
 	{
-		this.displayText = StringUtils.isEmpty(text) ? def : text;
+		return pos;
 	}
 
 	public void setPos(BlockPos pos)
@@ -58,14 +56,14 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		this.pos = pos;
 	}
 
-	public BlockPos getPos()
-	{
-		return pos;
-	}
-
 	public String getDisplayText()
 	{
 		return displayText;
+	}
+
+	public void setDisplayText(String text)
+	{
+		this.displayText = StringUtils.isEmpty(text) ? "Destination" : text;
 	}
 
 	@Override
@@ -217,5 +215,11 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	public void enableEditMode()
 	{
 		editMode = true;
+	}
+
+	public void setPointer(BlockPos pos, String s)
+	{
+		setPos(pos);
+		setDisplayText(s);
 	}
 }
