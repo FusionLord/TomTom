@@ -83,11 +83,11 @@ processResources
         }
 
 // Add Access Transformers Manifest
-//jar {
-//    manifest {
-//        attributes 'FMLAT': 'TomTom_at.cfg'
-//    }
-//}
+jar {
+    manifest {
+        attributes 'FMLAT': 'TomTom_at.cfg'
+    }
+}
 
 curseforge {
     apiKey = curseApiKey

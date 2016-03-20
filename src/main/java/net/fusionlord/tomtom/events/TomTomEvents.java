@@ -8,7 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
+import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +35,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	public float y = 0;
 	private Minecraft mc = Minecraft.getMinecraft();
 	private ResourceLocation texture;
-	private IBakedModel bakedModel;
+	private OBJModel.OBJBakedModel bakedModel;
 	private double dist;
 	private int ticker;
 	private BlockPos pos;
@@ -74,7 +76,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			OBJLoader.instance.addDomain(ModInfo.MOD_ID);
 			OBJModel model = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow3.obj"));
 			Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-			bakedModel = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
+			bakedModel = (OBJModel.OBJBakedModel) model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
 
 			texture = new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png");
 		} catch (Exception e)
@@ -183,10 +185,12 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		GlStateManager.scale(scale, scale, scale);
 
 		mc.getTextureManager().bindTexture(texture);
+//		for(BakedQuad quad : bakedModel.)
+//		{
+//			LightUtil.renderQuadColor(Tessellator.getInstance().getBuffer(), quad, 0xFF0000);
+//		}
+		//mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, 0f, 0f, 1f);
 
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, 0f, 0f, 1f);
-
-		RenderHelper.disableStandardItemLighting();
 
 		GlStateManager.scale(1, 1, 1);
 		GlStateManager.disableRescaleNormal();
