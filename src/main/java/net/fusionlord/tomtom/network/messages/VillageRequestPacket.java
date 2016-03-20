@@ -2,8 +2,8 @@ package net.fusionlord.tomtom.network.messages;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.VillageCollection;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -44,7 +44,7 @@ public class VillageRequestPacket implements IMessage
 			if(pos != null)
 			{
 				String s = "[\"\",{\"text\":\"This is \"},{\"text\":\"[CLOSE]\",\"color\":\"dark_purple\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"As per Mojang.\",\"color\":\"blue\"}]}}},{\"text\":\" to a village.\",\"color\":\"none\"}]";
-				IChatComponent chatComponent = IChatComponent.Serializer.jsonToComponent(s);
+				ITextComponent chatComponent = ITextComponent.Serializer.jsonToComponent(s);
 				player.addChatComponentMessage(chatComponent);
 				return new SetDestinationPacket(pos, "Village");
 			}

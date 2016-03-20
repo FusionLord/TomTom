@@ -5,8 +5,9 @@ import net.fusionlord.tomtom.network.PacketHandler;
 import net.fusionlord.tomtom.network.messages.VillageRequestPacket;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class WaypointCommand implements ICommand
 		aliases.add("tomtom");
 		aliases.add("waypoint");
 		aliases.add("way");
-
 	}
 
 	@Override
@@ -38,18 +38,16 @@ public class WaypointCommand implements ICommand
 	public String getCommandUsage(ICommandSender var1)
 	{
 		return "way <x> <y> <x> [display text]";
-
 	}
 
 	@Override
 	public List getCommandAliases()
 	{
 		return this.aliases;
-
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] argString)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] argString)
 	{
 		if (argString.length < 3 && argString.length != 1)
 		{
@@ -122,17 +120,17 @@ public class WaypointCommand implements ICommand
 
 	private void fail(ICommandSender sender)
 	{
-		sender.addChatMessage(new ChatComponentText("Usage: " + getCommandUsage(sender)));
+		sender.addChatMessage(new TextComponentString("Usage: " + getCommandUsage(sender)));
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender var1)
+	public boolean checkPermission(MinecraftServer server, ICommandSender var1)
 	{
 		return true;
 	}
 
 	@Override
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
 	{
 		return null;
 	}
@@ -145,7 +143,7 @@ public class WaypointCommand implements ICommand
 	}
 
 	@Override
-	public int compareTo(ICommand o)
+	public int compareTo(ICommand command)
 	{
 		return 0;
 	}

@@ -2,30 +2,29 @@ package net.fusionlord.tomtom.events;
 
 import com.google.common.base.Function;
 import net.fusionlord.tomtom.configuration.ConfigurationFile;
+import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
-import java.io.IOException;
 
 public class TomTomEvents implements IResourceManagerReloadListener
 {
@@ -69,29 +68,18 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
+		LogHelper.info(">>>: Reloading arrow model now...");
 		try
 		{
 			OBJLoader.instance.addDomain(ModInfo.MOD_ID);
-			OBJModel model = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow.obj"));
+			OBJModel model = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/gps_arrow3.obj"));
 			Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			bakedModel = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
 
 			texture = new ResourceLocation(ModInfo.MOD_ID, "textures/arrow.png");
-		}
-		catch(IOException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
-		}
-	}
-
-	@SubscribeEvent
-	public void onKeyEvent(InputEvent.KeyInputEvent event)
-	{
-		if(editMode && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-		{
-			editMode = false;
-			ConfigurationFile.setGPSPos(x, y);
-			mc.displayGuiScreen(null);
 		}
 	}
 
@@ -104,6 +92,13 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 			boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 			float a = (shift ? .005f * (ctrl ? 10f : 1f) : .001f);
+			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+				editMode = false;
+				System.out.println("exiting edit mode");
+				ConfigurationFile.setGPSPos(x, y);
+				mc.displayGuiScreen(null);
+			}
+
 			if (Keyboard.isKeyDown(Keyboard.KEY_UP))
 			{
 				y = MathHelper.clamp_float(y - a, 0, 1);
@@ -189,7 +184,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 
 		mc.getTextureManager().bindTexture(texture);
 
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, .5f, .5f, 0f);
+		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(bakedModel, 1f, 0f, 0f, 1f);
 
 		RenderHelper.disableStandardItemLighting();
 

@@ -7,12 +7,12 @@ import net.fusionlord.tomtom.network.PacketHandler;
 import net.fusionlord.tomtom.network.messages.SetDestinationPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.UUID;
 
@@ -41,7 +41,7 @@ public class IMCEvents
 
 					if (event.side == Side.SERVER)
 					{
-						EntityPlayerMP player = (EntityPlayerMP) MinecraftServer.getServer().getEntityFromUuid(new UUID(tag.getLong("uuid-most"), tag.getLong("uuid-least")));
+						EntityPlayerMP player = (EntityPlayerMP) FMLServerHandler.instance().getServer().getEntityFromUuid(new UUID(tag.getLong("uuid-most"), tag.getLong("uuid-least")));
 						PacketHandler.INSTANCE.sendTo(new SetDestinationPacket(tag), player);
 						return;
 					}

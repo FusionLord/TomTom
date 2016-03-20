@@ -1,6 +1,5 @@
 package net.fusionlord.tomtom;
 
-import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.fusionlord.tomtom.proxy.IProxy;
 import net.minecraftforge.fml.common.Mod;
@@ -9,7 +8,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by FusionLord on 2/22/2016.
