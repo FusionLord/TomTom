@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -34,14 +35,14 @@ public class Arrow
 		{
 			JsonObject obj = (JsonObject) parser.parse(new FileReader(jsonFile));
 
-			OBJModel model = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(obj.get("model").getAsString()));
+			OBJModel model = (OBJModel) OBJLoader.instance.loadModel(new ResourceLocation(ModInfo.MOD_ID, obj.get("model").getAsString()));
 			Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, textureGetter::apply);
 
 			JsonArray array = obj.getAsJsonArray("textures");
 			for(JsonElement texture : array)
 			{
-				textures.add(new ResourceLocation(texture.getAsString()));
+				textures.add(new ResourceLocation(ModInfo.MOD_ID, texture.getAsString()));
 			}
 		}
 		catch(Exception e)
