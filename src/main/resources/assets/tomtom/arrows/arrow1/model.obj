@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib gps_arrow.mtl
+mtllib model.mtl
 o Model
 v 0.500090 -0.080175 0.000000
 v 0.084565 -0.080175 -0.125000
