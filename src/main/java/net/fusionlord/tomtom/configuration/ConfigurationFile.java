@@ -15,6 +15,8 @@ import java.io.File;
 public class ConfigurationFile {
 	public static Configuration configuration;
 
+	public static boolean renderHUD, renderWaypoint, renderFoot;
+
 	public ConfigurationFile(File configFile)
 	{
 		if (configuration == null) {
@@ -29,6 +31,9 @@ public class ConfigurationFile {
 
 		TomTomEvents.INSTANCE.x = configuration.getFloat("xPos", "general", .5f, 0f, 1f, "X position of the gps arrow.", "config.tomtom.xpos.comment");
 		TomTomEvents.INSTANCE.y = configuration.getFloat("yPos", "general", .5f, 0f, 1f, "Y position of the gps arrow.", "config.tomtom.ypos.comment");
+		renderHUD = configuration.getBoolean("renderHUD", "general", true, "Render the Heads Up Display arrow?", "config.tomtom.renderhud.comment");
+		renderWaypoint = configuration.getBoolean("renderWaypoint", "general", false, "Render the bobbing arrow waypoint?", "config.tomtom.renderwaypoint.comment");
+		renderFoot = configuration.getBoolean("renderFoot", "general", false, "Render the foot arrow?", "config.tomtom.renderfoot.comment");
 
 		configuration.save();
 	}

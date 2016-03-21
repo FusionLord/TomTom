@@ -232,47 +232,54 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		double playerY = mc.thePlayer.lastTickPosY + ((mc.thePlayer.posY) - mc.thePlayer.lastTickPosY) * event.partialTicks;
 		double playerZ = mc.thePlayer.lastTickPosZ + ((mc.thePlayer.posZ) - mc.thePlayer.lastTickPosZ) * event.partialTicks;
 
-		float distX = (float) target.getX() + .5f - (float) playerX;
-		float distZ = (float) target.getZ() + .5f - (float) playerZ;
+		if(ConfigurationFile.renderWaypoint)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.pushMatrix();
+			GlStateManager.rotate(180f, 1, 0, 0);
+			RenderHelper.enableGUIStandardItemLighting();
+			GlStateManager.popMatrix();
+			float bob = .5f * MathHelper.sin((float) ticker / 10f);
+			GlStateManager.translate(-playerX, -playerY, -playerZ);
+			GlStateManager.translate(target.getX() + .5f, mc.theWorld.getTopSolidOrLiquidBlock(target).getY() + 1.5f, target.getZ() + .5f);
+			GlStateManager.translate(0, bob, 0);
+			GlStateManager.rotate(-90, 1f, 0f, 0f);
+			GlStateManager.rotate(90, 0f, 1f, 0f);
+			GlStateManager.rotate((ticker % 180) * 3, 1, 0, 0);
+			mc.getTextureManager().bindTexture(selectedArrow.getCurrentTexture());
+			mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(selectedArrow.getModel(), 1f, 0f, 0f, 0f);
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popMatrix();
+		}
 
-		double angleRadians = Math.atan2(distZ, distX);
-		float angleDegrees = (float) Math.toDegrees(angleRadians);
+		if(ConfigurationFile.renderFoot)
+		{
 
-		angleDegrees -= mc.thePlayer.rotationYaw - 180;
+			float distX = (float) target.getX() + .5f - (float) playerX;
+			float distZ = (float) target.getZ() + .5f - (float) playerZ;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.pushMatrix();
-		GlStateManager.rotate(180f, 1, 0, 0);
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.popMatrix();
-		float bob = .5f * MathHelper.sin((float) ticker / 10f);
-		GlStateManager.translate(-playerX, -playerY, -playerZ);
-		GlStateManager.translate(target.getX() + .5f, mc.theWorld.getTopSolidOrLiquidBlock(target).getY() + 1.5f, target.getZ() + .5f);
-		GlStateManager.translate(0, bob, 0);
-		GlStateManager.rotate(-90, 1f, 0f, 0f);
-		GlStateManager.rotate(90, 0f, 1f, 0f);
-		GlStateManager.rotate((ticker % 180) * 3, 1, 0, 0);
-		mc.getTextureManager().bindTexture(selectedArrow.getCurrentTexture());
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(selectedArrow.getModel(), 1f, 0f, 0f, 0f);
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.popMatrix();
+			double angleRadians = Math.atan2(distZ, distX);
+			float angleDegrees = (float) Math.toDegrees(angleRadians);
 
-		GlStateManager.pushMatrix();
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.rotate(-mc.thePlayer.rotationYaw, 0, 1, 0);
-		GlStateManager.rotate(180, 0, 1, 0);
-		GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
-		mc.getTextureManager().bindTexture(selectedArrow.getCurrentTexture());
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(selectedArrow.getModel(), 1f, 0f, 0f, 0f);
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.popMatrix();
+			angleDegrees -= mc.thePlayer.rotationYaw - 180;
+
+			GlStateManager.pushMatrix();
+			RenderHelper.enableGUIStandardItemLighting();
+			GlStateManager.rotate(-mc.thePlayer.rotationYaw, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 1, 0);
+			GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
+			mc.getTextureManager().bindTexture(selectedArrow.getCurrentTexture());
+			mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(selectedArrow.getModel(), 1f, 0f, 0f, 0f);
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popMatrix();
+		}
 	}
 
 	@SubscribeEvent
 	public void drawHud(TickEvent.RenderTickEvent event)
 	{
-		if(event.phase != TickEvent.Phase.END || mc.thePlayer == null || (getPos() == null && !editMode) || mc.gameSettings.hideGUI)
+		if(event.phase != TickEvent.Phase.END || mc.thePlayer == null || (getPos() == null && !editMode) || mc.gameSettings.hideGUI || !ConfigurationFile.renderHUD)
 		{ return; }
 
 		if(mc.currentScreen != null)
@@ -366,6 +373,8 @@ public class TomTomEvents implements IResourceManagerReloadListener
 
 	public void enableEditMode()
 	{
+		if(!ConfigurationFile.renderHUD)
+		{ return; }
 		editMode = true;
 		System.setProperty("fml.noGrab", "true");
 		mc.mouseHelper.ungrabMouseCursor();
