@@ -1,6 +1,6 @@
 {
-  "model": "tomtom:arrows/arrow3/model.obj",
+  "model": "arrows/arrow3/model.obj",
   "textures": [
-    "tomtom:arrows/arrow3/texture.png"
+    "arrows/arrow3/texture.png"
   ]
 }
