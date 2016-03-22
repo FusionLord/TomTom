@@ -29,19 +29,20 @@ public class ConfigurationFile {
 		// General Configuration
 		configuration.setCategoryLanguageKey("general", "config.general");
 
-		TomTomEvents.INSTANCE.x = configuration.getFloat("xPos", "general", .5f, 0f, 1f, "X position of the gps arrow.", "config.tomtom.xpos.comment");
-		TomTomEvents.INSTANCE.y = configuration.getFloat("yPos", "general", .5f, 0f, 1f, "Y position of the gps arrow.", "config.tomtom.ypos.comment");
-		renderHUD = configuration.getBoolean("renderHUD", "general", true, "Render the Heads Up Display arrow?", "config.tomtom.renderhud.comment");
-		renderWaypoint = configuration.getBoolean("renderWaypoint", "general", false, "Render the bobbing arrow waypoint?", "config.tomtom.renderwaypoint.comment");
-		renderFoot = configuration.getBoolean("renderFoot", "general", false, "Render the foot arrow?", "config.tomtom.renderfoot.comment");
+		TomTomEvents.INSTANCE.x = configuration.getFloat("xPos", "hidden", .5f, 0f, 1f, "X position of the gps arrow.", "config.tomtom.xpos.comment");
+		TomTomEvents.INSTANCE.y = configuration.getFloat("yPos", "hidden", .5f, 0f, 1f, "Y position of the gps arrow.", "config.tomtom.ypos.comment");
+
+		renderHUD = configuration.getBoolean("Render HUD", "general", true, "Render the Heads Up Display arrow?", "config.tomtom.renderhud.comment");
+		renderWaypoint = configuration.getBoolean("Render Waypoint", "general", false, "Render the bobbing arrow waypoint?", "config.tomtom.renderwaypoint.comment");
+		renderFoot = configuration.getBoolean("Render Foot", "general", false, "Render the foot arrow?", "config.tomtom.renderfoot.comment");
 
 		configuration.save();
 	}
 
 	public static void setGPSPos(float x, float y)
 	{
-		configuration.getCategory("general").get("xPos").setValue(x);
-		configuration.getCategory("general").get("yPos").setValue(x);
+		configuration.getCategory("hidden").get("xPos").setValue(x);
+		configuration.getCategory("hidden").get("yPos").setValue(y);
 		configuration.save();
 	}
 
