@@ -1,0 +1,9 @@
+#TomTom Language file
+#Gui
+tomtom.button.nextarrow.name=Next Arrow
+tomtom.button.prevarrow.name=Previous Arrow
+tomtom.button.nextskin.name=Next Skin
+tomtom.button.prevskin.name=Previous Skin
+tomtom.button.movehud.name=Move H.U.D
+tomtom.button.close.name=Close
+tomtom.button.editarrow.name=Edit Arrow

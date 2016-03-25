@@ -1,10 +1,12 @@
 package net.fusionlord.tomtom.commands;
 
+import net.fusionlord.tomtom.TomTom;
 import net.fusionlord.tomtom.events.TomTomEvents;
 import net.fusionlord.tomtom.network.PacketHandler;
 import net.fusionlord.tomtom.network.messages.VillageRequestPacket;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -65,7 +67,8 @@ public class WaypointCommand implements ICommand
 			}
 			if (argString[0].equalsIgnoreCase("edit"))
 			{
-				TomTomEvents.INSTANCE.enableEditMode();
+				//				TomTomEvents.INSTANCE.enableEditMode();
+				((EntityPlayer) sender.getCommandSenderEntity()).openGui(TomTom.INSTANCE, 0, server.getEntityWorld(), 0, 0, 1);
 				return;
 			}
 			if(argString[0].equalsIgnoreCase("struct"))

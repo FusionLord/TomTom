@@ -2,17 +2,16 @@ package net.fusionlord.tomtom.events;
 
 import com.google.common.collect.ImmutableList;
 import net.fusionlord.tomtom.TomTom;
-import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.network.PacketHandler;
 import net.fusionlord.tomtom.network.messages.SetDestinationPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.UUID;
 
@@ -37,11 +36,9 @@ public class IMCEvents
 					if(!tag.hasKey("location"))
 					{ return; }
 
-					LogHelper.info("Valid gps message.");
-
 					if (event.side == Side.SERVER)
 					{
-						EntityPlayerMP player = (EntityPlayerMP) FMLServerHandler.instance().getServer().getEntityFromUuid(new UUID(tag.getLong("uuid-most"), tag.getLong("uuid-least")));
+						EntityPlayerMP player = (EntityPlayerMP) FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(new UUID(tag.getLong("uuid-most"), tag.getLong("uuid-least")));
 						PacketHandler.INSTANCE.sendTo(new SetDestinationPacket(tag), player);
 						return;
 					}
@@ -51,7 +48,6 @@ public class IMCEvents
 					{
 						TomTomEvents.INSTANCE.setDisplayText(tag.getString("text"));
 					}
-					LogHelper.info(String.format("BlockPos: %s DisplayText: %s", TomTomEvents.INSTANCE.getPos().toString(), TomTomEvents.INSTANCE.getDisplayText()));
 				}
 			}
 		}

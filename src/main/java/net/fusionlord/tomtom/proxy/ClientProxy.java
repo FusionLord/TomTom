@@ -2,6 +2,7 @@ package net.fusionlord.tomtom.proxy;
 
 import net.fusionlord.tomtom.commands.WaypointCommand;
 import net.fusionlord.tomtom.configuration.ConfigurationFile;
+import net.fusionlord.tomtom.events.GuiEvents;
 import net.fusionlord.tomtom.events.TomTomEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -20,6 +21,7 @@ public class ClientProxy extends CommonProxy
 	{
 		new TomTomEvents();
 		MinecraftForge.EVENT_BUS.register(new ConfigurationFile(event.getSuggestedConfigurationFile()));
+		MinecraftForge.EVENT_BUS.register(new GuiEvents());
 		super.preInit(event);
 	}
 
