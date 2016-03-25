@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class GuiTomTom extends GuiScreen
 {
-	int ticker = 0;
+	private int ticker = 0;
 	private GuiScreen parentScreen;
 	private GuiButton nextArrow, prevArrow, nextSkin, prevSkin, moveHUD, close;
 	private boolean moveMode, prevMoveMode;
@@ -122,13 +122,19 @@ public class GuiTomTom extends GuiScreen
 		{
 			if(prevMoveMode)
 			{ prevMoveMode = false; }
-			drawRect(0, 0, width, height, new Color(255, 255, 255, 128).hashCode());
+
+			drawRect(0, 0, width, height, new Color(255, 255, 255, 64).hashCode());
 			drawHorizontalLine(0, width, mouseY, Color.red.hashCode());
 			drawVerticalLine(mouseX, 0, height, Color.red.hashCode());
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, 0, 100);
 			drawArrow(mouseX, mouseY, scale);
 			GlStateManager.popMatrix();
+
+			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.name"), mouseX, mouseY + 15, Color.white.hashCode());
+			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.coords.name"), mouseX, mouseY + 25, Color.white.hashCode());
+
+			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.movemessage.name"), width / 2, 5, Color.GREEN.hashCode());
 		}
 	}
 

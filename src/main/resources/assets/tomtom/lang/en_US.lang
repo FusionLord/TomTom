@@ -7,3 +7,6 @@ tomtom.button.prevskin.name=Previous Skin
 tomtom.button.movehud.name=Move H.U.D
 tomtom.button.close.name=Close
 tomtom.button.editarrow.name=Edit Arrow
+tomtom.label.movemessage.name=Click where you would like to move the arrow to.
+tomtom.label.editmode.name=Destination! - 0m
+tomtom.label.editmode.coords.name=X:0 Y:0 Z:0
