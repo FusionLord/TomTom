@@ -13,11 +13,11 @@ import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by FusionLord on 3/20/2016.
@@ -30,12 +30,12 @@ public class Arrow
 	private int current = 0;
 	private boolean useUniTextures = false;
 
-	public Arrow(File jsonFile)
+	public Arrow(String jsonFile)
 	{
 		JsonParser parser = new JsonParser();
 		try
 		{
-			JsonObject obj = (JsonObject) parser.parse(new FileReader(jsonFile));
+			JsonObject obj = (JsonObject) parser.parse(new InputStreamReader(Arrow.class.getClassLoader().getResourceAsStream(jsonFile)));
 
 			if(obj.has("useUniversalTextures"))
 			{
@@ -44,12 +44,13 @@ public class Arrow
 			model = (OBJModel) OBJLoader.INSTANCE.loadModel(new ResourceLocation(ModInfo.MOD_ID, "models/" + obj.get("model").getAsString()));
 			if(obj.has("textureFolder"))
 			{
-				for(File texture : new File(Arrow.class.getClassLoader().getResource("assets/tomtom/textures/" + obj.get("textureFolder").getAsString()).toURI()).listFiles(pathname -> {
-					return pathname.getName().endsWith(".png");
-				}))
-				{
-					textures.add(new ResourceLocation(ModInfo.MOD_ID, texture.getAbsolutePath().substring(texture.getAbsolutePath().lastIndexOf("\\tomtom\\textures\\") + "\\tomtom\\textures\\".length()).replace(".png", "")));
-				}
+				textures.addAll(TomTomEvents.getFilesInJarDir("assets/tomtom/textures/" + obj.get("textureFolder").getAsString(), ".png").stream().map(texture -> new ResourceLocation(ModInfo.MOD_ID, obj.get("textureFolder").getAsString().replace("/tomtom/textures/", "") + texture.replace(".png", ""))).collect(Collectors.toList()));
+				//				for(File texture : new File(Arrow.class.getClassLoader().getResource("assets/tomtom/textures/" + obj.get("textureFolder").getAsString()).toURI()).listFiles(pathname -> {
+				//					return pathname.getName().endsWith(".png");
+				//				}))
+				//				{
+				//					textures.add(new ResourceLocation(ModInfo.MOD_ID, texture.getAbsolutePath().substring(texture.getAbsolutePath().lastIndexOf("\\tomtom\\textures\\") + "\\tomtom\\textures\\".length()).replace(".png", "")));
+				//				}
 			}
 			if(textures.isEmpty() || textures.size() == 0)
 			{ useUniTextures = true; }

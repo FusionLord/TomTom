@@ -1,6 +1,7 @@
 package net.fusionlord.tomtom.events;
 
 import net.fusionlord.tomtom.configuration.ConfigurationFile;
+import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.fusionlord.tomtom.rendering.Arrow;
 import net.minecraft.client.Minecraft;
@@ -22,9 +23,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
-import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class TomTomEvents implements IResourceManagerReloadListener
@@ -52,6 +59,61 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		return universalTextures;
 	}
 
+	public static List<String> getFilesInJarDir(String dir, String ext)
+	{
+		List<String> list = new ArrayList<>();
+		FileSystem fileSystem = null;
+		try
+		{
+			URI uri = TomTomEvents.class.getClassLoader().getResource(dir).toURI();
+			Path myPath;
+			if(uri.getScheme().equals("jar"))
+			{
+				try
+				{
+					fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+					myPath = fileSystem.getPath(dir);
+				}
+				catch(FileAlreadyExistsException ex)
+				{
+					fileSystem = FileSystems.getFileSystem(uri);
+					myPath = fileSystem.getPath(dir);
+				}
+			}
+			else
+			{
+				myPath = Paths.get(uri);
+			}
+			Stream<Path> walk = Files.walk(myPath, 1);
+			for(Iterator<Path> it = walk.iterator(); it.hasNext(); )
+			{
+				Path path = it.next();
+				LogHelper.info(">>> FileWalker: " + path);
+				if(path.toString().endsWith(ext))
+				{
+					String texture = path.toString().substring((path.toString().lastIndexOf("\\") == -1 ? path.toString().lastIndexOf("/") : path.toString().lastIndexOf("\\")) + 1);
+					list.add(texture);
+				}
+			}
+		}
+		catch(IOException | URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		if(fileSystem != null && fileSystem.isOpen())
+		{
+			try
+			{
+				fileSystem.close();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+
 	public void setPos(BlockPos pos)
 	{
 		this.pos = pos;
@@ -69,19 +131,18 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		try
 		{
 			universalTextures = new ArrayList<>();
-			for(File texture : new File(TomTomEvents.class.getClassLoader().getResource("assets/tomtom/textures/arrows/universal/").toURI()).listFiles(pathname -> {
-				return pathname.getName().endsWith(".png");
-			}))
+			for(String texture : getFilesInJarDir("assets/tomtom/textures/arrows/universal/", ".png"))
 			{
-				universalTextures.add(new ResourceLocation(ModInfo.MOD_ID, "arrows/universal/" + texture.getName().replace(".png", "")));
+				LogHelper.info(">>> Loading: " + "arrows/universal/" + texture.replace(".png", ""));
+				universalTextures.add(new ResourceLocation(ModInfo.MOD_ID, "arrows/universal/" + texture.replace(".png", "")));
 			}
 			arrows = new ArrayList<>();
 			OBJLoader.INSTANCE.addDomain(ModInfo.MOD_ID);
-			for(File jsonFile : new File(TomTomEvents.class.getClassLoader().getResource("assets/tomtom/arrows/").toURI()).listFiles(pathname -> {
-				return pathname.getAbsolutePath().endsWith(".json");
-			}))
+			LogHelper.info(">>>: Mod domain registered.");
+			for(String jsonFile : getFilesInJarDir("assets/tomtom/arrows/", ".json"))
 			{
-				arrows.add(new Arrow(jsonFile));
+				LogHelper.info(">>> Loading Model: " + "assets/tomtom/arrows/" + jsonFile);
+				arrows.add(new Arrow("assets/tomtom/arrows/" + jsonFile));
 			}
 		} catch (Exception e)
 		{
