@@ -157,7 +157,7 @@ public class GuiTomTom extends GuiScreen
 		GlStateManager.scale(scale, scale, scale);
 
 		GlStateManager.color(0, 0, 0, 1);
-		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(TomTomEvents.INSTANCE.getSelectedArrow().getModel(), 1f, 0f, 0f, 0f);
 		GlStateManager.scale(1, 1, 1);
 		GlStateManager.disableRescaleNormal();

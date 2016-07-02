@@ -21,6 +21,7 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 
 import java.awt.*;
 import java.io.IOException;
@@ -48,6 +49,8 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	private String displayText;
 	private List<Arrow> arrows;
 	private int selectedIdx = 0;
+	private int cooldown;
+	public int cooldownLimit;
 
 	public TomTomEvents()
 	{
@@ -168,9 +171,17 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		mc = Minecraft.getMinecraft();
 		dist = Math.sqrt(event.player.getDistanceSq(pos));
 
-		if(mc.currentScreen != null && !(mc.currentScreen instanceof GuiGameOver) && dist < 2D && !event.player.isDead && ticker % 300 == 0)
+		if (mc.currentScreen == null && dist < 2D && !event.player.isDead)
 		{
-			setPos(null);
+			if (cooldown++ >= cooldownLimit * 20)
+			{
+				setPos(null);
+				cooldown = 0;
+			}
+		}
+		else
+		{
+			cooldown = 0;
 		}
 	}
 
@@ -285,7 +296,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 
 		GlStateManager.color(1f, 0, 0);
 
-		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(getSelectedArrow().getModel(), .75f, 0f, 0f, 1f);
 
 		GlStateManager.scale(1, 1, 1);
@@ -299,6 +310,9 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 18, Color.white.hashCode());
 		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
 		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 28, Color.white.hashCode());
+		s = "" + cooldownLimit * 20 + ":" + cooldown + "";
+		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 38, Color.white.hashCode());
+
 
 		GlStateManager.popMatrix();
 	}

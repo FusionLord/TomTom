@@ -31,6 +31,7 @@ public class ConfigurationFile {
 
 		TomTomEvents.INSTANCE.x = configuration.getFloat("xPos", "hidden", .5f, 0f, 1f, "X position of the gps arrow.", "config.tomtom.xpos.comment");
 		TomTomEvents.INSTANCE.y = configuration.getFloat("yPos", "hidden", .5f, 0f, 1f, "Y position of the gps arrow.", "config.tomtom.ypos.comment");
+		TomTomEvents.INSTANCE.cooldownLimit = configuration.getInt("Timer", "general", 3, 0, Integer.MAX_VALUE, "Number of seconds until waypoint is removed", "config.tomtom.timer.comment");
 
 		renderHUD = configuration.getBoolean("Render HUD", "general", true, "Render the Heads Up Display arrow?", "config.tomtom.renderhud.comment");
 		renderWaypoint = configuration.getBoolean("Render Waypoint", "general", false, "Render the bobbing arrow waypoint?", "config.tomtom.renderwaypoint.comment");
