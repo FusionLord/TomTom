@@ -32,6 +32,10 @@ public class ConfigurationFile {
 		TomTomEvents.INSTANCE.x = configuration.getFloat("xPos", "hidden", .5f, 0f, 1f, "X position of the gps arrow.", "config.tomtom.xpos.comment");
 		TomTomEvents.INSTANCE.y = configuration.getFloat("yPos", "hidden", .5f, 0f, 1f, "Y position of the gps arrow.", "config.tomtom.ypos.comment");
 		TomTomEvents.INSTANCE.cooldownLimit = configuration.getInt("Timer", "general", 3, 0, Integer.MAX_VALUE, "Number of seconds until waypoint is removed", "config.tomtom.timer.comment");
+		TomTomEvents.INSTANCE.drawCoords = configuration.getBoolean("drawCoords", "general", true, "Should the coordinates be drawn on the hud?");
+		TomTomEvents.INSTANCE.textRed = configuration.getInt("textRed", "general", 255, 0, 255, "The red value of the HUD Text color.");
+		TomTomEvents.INSTANCE.textGreen = configuration.getInt("textGreen", "general", 255, 0, 255, "The green value of the HUD Text color.");
+		TomTomEvents.INSTANCE.textBlue = configuration.getInt("textBlue", "general", 255, 0, 255, "The blue value of the HUD Text color.");
 
 		renderHUD = configuration.getBoolean("Render HUD", "general", true, "Render the Heads Up Display arrow?", "config.tomtom.renderhud.comment");
 		renderWaypoint = configuration.getBoolean("Render Waypoint", "general", false, "Render the bobbing arrow waypoint?", "config.tomtom.renderwaypoint.comment");

@@ -51,6 +51,10 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	private int selectedIdx = 0;
 	private int cooldown;
 	public int cooldownLimit;
+	public boolean drawCoords;
+	public int textRed;
+	public int textGreen;
+	public int textBlue;
 
 	public TomTomEvents()
 	{
@@ -219,7 +223,6 @@ public class TomTomEvents implements IResourceManagerReloadListener
 
 		if(ConfigurationFile.renderFoot)
 		{
-
 			float distX = (float) target.getX() + .5f - (float) playerX;
 			float distZ = (float) target.getZ() + .5f - (float) playerZ;
 
@@ -307,14 +310,17 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		RenderHelper.enableGUIStandardItemLighting();
 
 		String s = String.format("%s - %sm", displayText, (int) dist);
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 18, Color.white.hashCode());
-		s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 28, Color.white.hashCode());
-		s = "" + cooldownLimit * 20 + ":" + cooldown + "";
-		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 38, Color.white.hashCode());
-
+		mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 18, textColor());
+		if (drawCoords) {
+			s = String.format("X:%s Y:%s Z:%s", target.getX(), target.getY(), target.getZ());
+			mc.fontRendererObj.drawStringWithShadow(s, scaledResolution.getScaledWidth() * x - mc.fontRendererObj.getStringWidth(s) / 2, scaledResolution.getScaledHeight() * y + 28, textColor());
+		}
 
 		GlStateManager.popMatrix();
+	}
+
+	private int textColor() {
+		return new Color(textRed, textGreen, textBlue).hashCode();
 	}
 
 	public void setPointer(BlockPos pos, String s)

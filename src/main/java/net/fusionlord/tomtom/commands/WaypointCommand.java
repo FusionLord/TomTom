@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,6 @@ public class WaypointCommand implements ICommand
 			}
 			if (argString[0].equalsIgnoreCase("edit"))
 			{
-				//				TomTomEvents.INSTANCE.enableEditMode();
 				((EntityPlayer) sender.getCommandSenderEntity()).openGui(TomTom.INSTANCE, 0, server.getEntityWorld(), 0, 0, 1);
 				return;
 			}
@@ -79,7 +78,7 @@ public class WaypointCommand implements ICommand
 		else
 		{
 			int x, y, z;
-			if (StringUtils.isNumeric(argString[0]) || argString[0].equalsIgnoreCase("~"))
+			if (NumberUtils.isNumber(argString[0]) || argString[0].equalsIgnoreCase("~"))
 			{
 				x = argString[0].equalsIgnoreCase("~") ? sender.getPosition().getX() : Integer.parseInt(argString[0]);
 			}
@@ -89,7 +88,7 @@ public class WaypointCommand implements ICommand
 				return;
 			}
 
-			if (StringUtils.isNumeric(argString[1]) || argString[1].equalsIgnoreCase("~"))
+			if (NumberUtils.isNumber(argString[1]) || argString[1].equalsIgnoreCase("~"))
 			{
 				y = argString[1].equalsIgnoreCase("~") ? sender.getPosition().getY() : Integer.parseInt(argString[1]);
 			}
@@ -99,7 +98,7 @@ public class WaypointCommand implements ICommand
 				return;
 			}
 
-			if (StringUtils.isNumeric(argString[2]) || argString[2].equalsIgnoreCase("~"))
+			if (NumberUtils.isNumber(argString[2]) || argString[2].equalsIgnoreCase("~"))
 			{
 				z = argString[2].equalsIgnoreCase("~") ? sender.getPosition().getZ() : Integer.parseInt(argString[2]);
 			}
