@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 
@@ -117,7 +116,6 @@ public class GuiTomTom extends GuiScreen
 
 		drawArrow(x, y, scale);
 
-		//		LogHelper.info("moveMode: " + moveMode);
 		if(moveMode)
 		{
 			if(prevMoveMode)
@@ -131,8 +129,8 @@ public class GuiTomTom extends GuiScreen
 			drawArrow(mouseX, mouseY, scale);
 			GlStateManager.popMatrix();
 
-			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.name"), mouseX, mouseY + 15, Color.white.hashCode());
-			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.coords.name"), mouseX, mouseY + 25, Color.white.hashCode());
+			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.name"), mouseX, mouseY + 15, TomTomEvents.INSTANCE.textColor());
+			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.editmode.coords.name"), mouseX, mouseY + 25, TomTomEvents.INSTANCE.textColor());
 
 			drawCenteredString(fontRendererObj, I18n.translateToLocal("tomtom.label.movemessage.name"), width / 2, 5, Color.GREEN.hashCode());
 		}
@@ -157,8 +155,7 @@ public class GuiTomTom extends GuiScreen
 		GlStateManager.scale(scale, scale, scale);
 
 		GlStateManager.color(0, 0, 0, 1);
-		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(TomTomEvents.INSTANCE.getSelectedArrow().getModel(), 1f, 0f, 0f, 0f);
+		TomTomEvents.INSTANCE.getSelectedArrow().render();
 		GlStateManager.scale(1, 1, 1);
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableDepth();

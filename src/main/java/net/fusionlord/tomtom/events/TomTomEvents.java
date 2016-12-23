@@ -1,11 +1,9 @@
 package net.fusionlord.tomtom.events;
 
 import net.fusionlord.tomtom.configuration.ConfigurationFile;
-import net.fusionlord.tomtom.helpers.LogHelper;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.fusionlord.tomtom.rendering.Arrow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -20,8 +18,9 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
 
 import java.awt.*;
 import java.io.IOException;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
+@SideOnly(Side.CLIENT)
 public class TomTomEvents implements IResourceManagerReloadListener
 {
 	public static TomTomEvents INSTANCE;
@@ -95,7 +95,6 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			for(Iterator<Path> it = walk.iterator(); it.hasNext(); )
 			{
 				Path path = it.next();
-				LogHelper.info(">>> FileWalker: " + path);
 				if(path.toString().endsWith(ext))
 				{
 					String texture = path.toString().substring((path.toString().lastIndexOf("\\") == -1 ? path.toString().lastIndexOf("/") : path.toString().lastIndexOf("\\")) + 1);
@@ -140,15 +139,12 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			universalTextures = new ArrayList<>();
 			for(String texture : getFilesInJarDir("assets/tomtom/textures/arrows/universal/", ".png"))
 			{
-				LogHelper.info(">>> Loading: " + "arrows/universal/" + texture.replace(".png", ""));
 				universalTextures.add(new ResourceLocation(ModInfo.MOD_ID, "arrows/universal/" + texture.replace(".png", "")));
 			}
 			arrows = new ArrayList<>();
 			OBJLoader.INSTANCE.addDomain(ModInfo.MOD_ID);
-			LogHelper.info(">>>: Mod domain registered.");
 			for(String jsonFile : getFilesInJarDir("assets/tomtom/arrows/", ".json"))
 			{
-				LogHelper.info(">>> Loading Model: " + "assets/tomtom/arrows/" + jsonFile);
 				arrows.add(new Arrow("assets/tomtom/arrows/" + jsonFile));
 			}
 		} catch (Exception e)
@@ -193,13 +189,13 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	public void drawWorld(RenderWorldLastEvent event)
 	{
 		ticker++;
-		if(mc.thePlayer == null || pos == null)
+		if(mc.player == null || pos == null)
 		{ return; }
 		BlockPos target = pos;
 
-		double playerX = mc.thePlayer.lastTickPosX + ((mc.thePlayer.posX) - mc.thePlayer.lastTickPosX) * event.getPartialTicks();
-		double playerY = mc.thePlayer.lastTickPosY + ((mc.thePlayer.posY) - mc.thePlayer.lastTickPosY) * event.getPartialTicks();
-		double playerZ = mc.thePlayer.lastTickPosZ + ((mc.thePlayer.posZ) - mc.thePlayer.lastTickPosZ) * event.getPartialTicks();
+		double playerX = mc.player.lastTickPosX + ((mc.player.posX) - mc.player.lastTickPosX) * event.getPartialTicks();
+		double playerY = mc.player.lastTickPosY + ((mc.player.posY) - mc.player.lastTickPosY) * event.getPartialTicks();
+		double playerZ = mc.player.lastTickPosZ + ((mc.player.posZ) - mc.player.lastTickPosZ) * event.getPartialTicks();
 
 		if(ConfigurationFile.renderWaypoint)
 		{
@@ -211,7 +207,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			GlStateManager.popMatrix();
 			float bob = .5f * MathHelper.sin((float) ticker / 10f);
 			GlStateManager.translate(-playerX, -playerY, -playerZ);
-			GlStateManager.translate(target.getX() + .5f, mc.theWorld.getTopSolidOrLiquidBlock(target).getY() + 1.5f, target.getZ() + .5f);
+			GlStateManager.translate(target.getX() + .5f, mc.world.getTopSolidOrLiquidBlock(target).getY() + 1.5f, target.getZ() + .5f);
 			GlStateManager.translate(0, bob, 0);
 			GlStateManager.rotate(-90, 1f, 0f, 0f);
 			GlStateManager.rotate(90, 0f, 1f, 0f);
@@ -229,11 +225,11 @@ public class TomTomEvents implements IResourceManagerReloadListener
 			double angleRadians = Math.atan2(distZ, distX);
 			float angleDegrees = (float) Math.toDegrees(angleRadians);
 
-			angleDegrees -= mc.thePlayer.rotationYaw - 180;
+			angleDegrees -= mc.player.rotationYaw - 180;
 
 			GlStateManager.pushMatrix();
 			RenderHelper.enableGUIStandardItemLighting();
-			GlStateManager.rotate(-mc.thePlayer.rotationYaw, 0, 1, 0);
+			GlStateManager.rotate(-mc.player.rotationYaw, 0, 1, 0);
 			GlStateManager.rotate(180, 0, 1, 0);
 			GlStateManager.rotate(-angleDegrees, 0f, 1f, 0f);
 			mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(getSelectedArrow().getModel(), 1f, 0f, 0f, 0f);
@@ -245,7 +241,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void drawHud(TickEvent.RenderTickEvent event)
 	{
-		if(event.phase != TickEvent.Phase.END || mc.thePlayer == null || pos == null || mc.gameSettings.hideGUI || !ConfigurationFile.renderHUD)
+		if(event.phase != TickEvent.Phase.END || mc.player == null || pos == null || mc.gameSettings.hideGUI || !ConfigurationFile.renderHUD)
 		{ return; }
 
 		if(mc.currentScreen != null)
@@ -255,9 +251,9 @@ public class TomTomEvents implements IResourceManagerReloadListener
 
 		float scale = 20 * scaledResolution.getScaleFactor();
 
-		double playerX = mc.thePlayer.lastTickPosX + ((mc.thePlayer.posX) - mc.thePlayer.lastTickPosX) * event.renderTickTime;
-		double playerY = mc.thePlayer.lastTickPosY + ((mc.thePlayer.posY) - mc.thePlayer.lastTickPosY) * event.renderTickTime;
-		double playerZ = mc.thePlayer.lastTickPosZ + ((mc.thePlayer.posZ) - mc.thePlayer.lastTickPosZ) * event.renderTickTime;
+		double playerX = mc.player.lastTickPosX + ((mc.player.posX) - mc.player.lastTickPosX) * event.renderTickTime;
+		double playerY = mc.player.lastTickPosY + ((mc.player.posY) - mc.player.lastTickPosY) * event.renderTickTime;
+		double playerZ = mc.player.lastTickPosZ + ((mc.player.posZ) - mc.player.lastTickPosZ) * event.renderTickTime;
 
 		BlockPos target = pos;
 
@@ -268,7 +264,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		double angleRadians = Math.atan2(distZ, distX);
 		float angleDegrees = (float) Math.toDegrees(angleRadians);
 
-		angleDegrees -= mc.thePlayer.rotationYaw - 180;
+		angleDegrees -= mc.player.rotationYaw - 180;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
@@ -319,7 +315,7 @@ public class TomTomEvents implements IResourceManagerReloadListener
 		GlStateManager.popMatrix();
 	}
 
-	private int textColor() {
+	public int textColor() {
 		return new Color(textRed, textGreen, textBlue).hashCode();
 	}
 

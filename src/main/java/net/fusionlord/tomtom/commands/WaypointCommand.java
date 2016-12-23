@@ -10,14 +10,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by FusionLord on 2/23/2016.
  */
+@SideOnly(Side.CLIENT)
 public class WaypointCommand implements ICommand
 {
 	private final List aliases;
@@ -30,25 +34,22 @@ public class WaypointCommand implements ICommand
 		aliases.add("way");
 	}
 
-	@Override
-	public String getCommandName()
-	{
-		return "way";
-	}
+    @Override
+    public String getName() {
+        return "way";
+    }
 
-	@Override
-	public String getCommandUsage(ICommandSender var1)
-	{
-		return "way <x> <y> <x> [display text]";
-	}
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return "way <x> <y> <x> [display text]";
+    }
 
-	@Override
-	public List getCommandAliases()
-	{
-		return this.aliases;
-	}
+    @Override
+    public List<String> getAliases() {
+        return this.aliases;
+    }
 
-	@Override
+    @Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] argString)
 	{
 		if (argString.length < 3 && argString.length != 1)
@@ -122,7 +123,7 @@ public class WaypointCommand implements ICommand
 
 	private void fail(ICommandSender sender)
 	{
-		sender.addChatMessage(new TextComponentString("Usage: " + getCommandUsage(sender)));
+		sender.sendMessage(new TextComponentString("Usage: " + getUsage(sender)));
 	}
 
 	@Override
@@ -131,11 +132,10 @@ public class WaypointCommand implements ICommand
 		return true;
 	}
 
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
-	{
-		return null;
-	}
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return null;
+    }
 
 	@Override
 	public boolean isUsernameIndex(String[] var1, int var2)

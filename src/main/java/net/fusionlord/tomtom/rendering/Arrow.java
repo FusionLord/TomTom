@@ -5,13 +5,17 @@ import com.google.gson.JsonParser;
 import net.fusionlord.tomtom.events.TomTomEvents;
 import net.fusionlord.tomtom.helpers.ModInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -22,22 +26,23 @@ import java.util.stream.Collectors;
 /**
  * Created by FusionLord on 3/20/2016.
  */
+@SideOnly(Side.CLIENT)
 public class Arrow
 {
 	private IBakedModel bakedModel;
 	private OBJModel model;
 	private List<ResourceLocation> textures = new ArrayList<>();
 	private int current = 0;
-	private boolean useUniTextures = false;
 
-	public Arrow(String jsonFile)
+    public Arrow(String jsonFile)
 	{
 		JsonParser parser = new JsonParser();
 		try
 		{
 			JsonObject obj = (JsonObject) parser.parse(new InputStreamReader(Arrow.class.getClassLoader().getResourceAsStream(jsonFile)));
 
-			if(obj.has("useUniversalTextures"))
+            boolean useUniTextures = false;
+            if(obj.has("useUniversalTextures"))
 			{
 				useUniTextures = obj.get("useUniversalTextures").getAsBoolean();
 			}
@@ -45,15 +50,13 @@ public class Arrow
 			if(obj.has("textureFolder"))
 			{
 				textures.addAll(TomTomEvents.getFilesInJarDir("assets/tomtom/textures/" + obj.get("textureFolder").getAsString(), ".png").stream().map(texture -> new ResourceLocation(ModInfo.MOD_ID, obj.get("textureFolder").getAsString().replace("/tomtom/textures/", "") + texture.replace(".png", ""))).collect(Collectors.toList()));
-				//				for(File texture : new File(Arrow.class.getClassLoader().getResource("assets/tomtom/textures/" + obj.get("textureFolder").getAsString()).toURI()).listFiles(pathname -> {
-				//					return pathname.getName().endsWith(".png");
-				//				}))
-				//				{
-				//					textures.add(new ResourceLocation(ModInfo.MOD_ID, texture.getAbsolutePath().substring(texture.getAbsolutePath().lastIndexOf("\\tomtom\\textures\\") + "\\tomtom\\textures\\".length()).replace(".png", "")));
-				//				}
 			}
 			if(textures.isEmpty() || textures.size() == 0)
 			{ useUniTextures = true; }
+            if (useUniTextures)
+            {
+                textures.addAll(TomTomEvents.getUniversalTextures());
+            }
 			bake(model);
 		}
 		catch(Exception e)
@@ -64,8 +67,8 @@ public class Arrow
 
 	private void bake(OBJModel model)
 	{
-		Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(getCurrentTexture().toString());
-		bakedModel = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter::apply);
+		Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(textures.get(current).toString());
+        bakedModel = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter::apply);
 	}
 
 	public IBakedModel getModel()
@@ -73,33 +76,28 @@ public class Arrow
 		return bakedModel;
 	}
 
-	private ResourceLocation getCurrentTexture()
-	{
-		if(current < 0)
-		{ current = textures.size() + (useUniTextures ? TomTomEvents.getUniversalTextures().size() : 0); }
-		if(current > textures.size() + (useUniTextures ? TomTomEvents.getUniversalTextures().size() : 0) - 1)
-		{ current = 0; }
-		if(current > textures.size() - 1)
-		{
-			return TomTomEvents.getUniversalTextures().get(current - textures.size());
-		}
-		return textures.get(current);
-	}
-
 	public void nextTexture()
 	{
-		current++;
+        if (++current > textures.size() - 1) current = 0;
 		bake(model);
 	}
 
 	public void prevTexture()
 	{
-		current--;
-		bake(model);
+		if (--current < 0) current = textures.size() - 1;
+        bake(model);
 	}
 
 	public void stitchTextures(TextureStitchEvent event)
 	{
 		textures.forEach(event.getMap()::registerSprite);
 	}
+
+	public void render()
+    {
+        GlStateManager.pushMatrix();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(getModel(), 1f, 0f, 0f, 0f);
+        GlStateManager.popMatrix();
+    }
 }

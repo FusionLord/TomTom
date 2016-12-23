@@ -9,6 +9,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by FusionLord on 2/29/2016.
@@ -45,7 +47,7 @@ public class VillageRequestPacket implements IMessage
 			{
 				String s = "[\"\",{\"text\":\"This is \"},{\"text\":\"[CLOSE]\",\"color\":\"dark_purple\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"As per Mojang.\",\"color\":\"blue\"}]}}},{\"text\":\" to a village.\",\"color\":\"none\"}]";
 				ITextComponent chatComponent = ITextComponent.Serializer.jsonToComponent(s);
-				player.addChatComponentMessage(chatComponent);
+				player.sendMessage(chatComponent);
 				return new SetDestinationPacket(pos, "Village");
 			}
 			return null;

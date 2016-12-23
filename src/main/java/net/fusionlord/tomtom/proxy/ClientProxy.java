@@ -10,10 +10,13 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by FusionLord on 2/23/2016.
  */
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
 	@Override
